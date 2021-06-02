@@ -25,7 +25,6 @@ affinity - int <br>
 retrofit - bool <br>
 nicknames - bool (Whether ship nicknames are used in the contructor. False by default.)
 
-<br>
 ```
 s.stat - returns stats at level 120 retroit
 s.id - ship's id number
