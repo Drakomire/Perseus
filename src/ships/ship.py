@@ -3,6 +3,7 @@ import os
 from .nicknames import *
 from .stats import *
 from .retrofit import *
+from .skills import *
 from .__init__ import *
 
 class Ship:
@@ -25,7 +26,6 @@ class Ship:
 
         try:
             self.ship = ships[self.id]
-            self.skills = skills[self.id]
             self.level = level
             self.limit_break = limit_break
             self.affinity = affinity
@@ -89,8 +89,9 @@ class Ship:
     def armor_id(self):
         return self.ship["armor"]
 
-    def getSkill(self, number, level):
-        return self.skills[number-1][level-1]
+    @property
+    def skills(self):
+        return Skill.getSkills(self)
 
     def __str__(self):
         return str(self.id)
