@@ -1,8 +1,12 @@
 from .__init__ import *
 
-def getNickname(arg):
+def getNickname(name):
+    '''
+    :param name: ship's name. All lowercase for my stuff.
+    :return: Ship nickname is correct capitalization.
+    '''
     #if answer is a nickname, replace answer with ship it is referencing.
-    if arg.lower() in nicknames:
-        arg = nicknames[arg.lower()];
+    if name.lower() in nicknames:
+        name = nicknames[name.lower()];
 
-    return arg;
+    return name;

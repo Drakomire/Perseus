@@ -4,7 +4,12 @@ from .__init__ import *
 class Stats:
     @staticmethod
     def calculateStat(stat,ship):
-        index = ship.getRetrofitShipID() * ship._retrofit + ship.id * (not ship._retrofit)
+        '''
+        :param stat: the stat to calculate.
+        :param ship: the Ship class for the ship to calculate the stats of.
+        :return: ships stats at the current level
+        '''
+        index = ship.getRetrofitShipID() * ship.retrofit + ship.id * (not ship.retrofit)
         index = str(int(index)*10 + ship._limit_break)
 
 
@@ -32,13 +37,13 @@ class Stats:
 
         value = attr + (ship.level-1)*attrs_growth/1000 + (ship.level-100)*(attrs_growth_extra/1000)
         # Add enhancement values to the stat
-        if (stat in ship.ship["enhancement"]):
+        if (stat in ship.ship["enhancement"] and ship.enhancements):
             value += ship.ship["enhancement"][stat]
 
         value = math.floor(value*affinity_multiplier)
 
         #Add retrofit stat boost if retrofit
-        if (ship._retrofit):
+        if (ship.retrofit):
             retroStats = ship.getRetrofitStats()
             if (stat in retroStats):
                 value += retroStats[stat]
@@ -47,7 +52,21 @@ class Stats:
 
 
     @staticmethod
+    def getOilCost(ship):
+        '''
+        :param ship: the Ship class for the ship to calculate the oil cost of.
+        :return: ships oil cost at the current limit break. Rewrite is required to factor in level.
+        '''
+        index = ship.getRetrofitShipID() * ship.retrofit + ship.id * (not ship.retrofit)
+        index = str(int(index)*10 + ship._limit_break)
+        return ship.ship["data"][index]["oil"]
+
+    @staticmethod
     def getStats(ship):
+        '''
+        :param ship: the Ship class to calculate the stats of.
+        :return: the stats for the ship as written in documentation.
+        '''
         return {
           "hp": Stats.calculateStat("hp",ship),
           "fp": Stats.calculateStat("fp",ship),
@@ -59,5 +78,6 @@ class Stats:
           "eva": Stats.calculateStat("eva",ship),
           "spd": Stats.calculateStat("spd",ship),
           "luk": Stats.calculateStat("luk",ship),
-          "asw": Stats.calculateStat("asw",ship)
+          "asw": Stats.calculateStat("asw",ship),
+          "oil" : Stats.getOilCost(ship)
         }

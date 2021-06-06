@@ -9,8 +9,13 @@ class Retrofit:
 
     @staticmethod
     def getRetrofitStats(ship):
+        '''
+        :param ship: ship class to calculate the stats of.
+        :return: ships retrofit stats as per documentation.
+        '''
+
         out = {}
-        for node in ship["retrofit"]:
+        for node in ship.ship["retrofit"]:
             for r in retrofit[str(node)]["effect"]:
                 for key in r:
                     if (key in STAT_KEYWORDS):
@@ -26,8 +31,5 @@ class Retrofit:
         :param ship: The ship Object
         :return: the ships retrofit ID if it has one. Otherwise returns the original ID.
         """
-        for i in ship.ship["retrofit"]:
-            shipId = retrofit[str(i)]["ship_id"]
-            if (len(shipId)>0):
-                return str(math.floor(shipId[0][1]/10))
-        return ship.id
+        try: return str(ship.ship["retrofit_id"]//10)
+        except KeyError: return ship.id

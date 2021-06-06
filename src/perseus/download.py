@@ -5,57 +5,61 @@ import requests
 import json
 import io
 import os
+import hashlib
+from os import path
+import glob
 
 dir = os.path.dirname(__file__)
 
 #REMINDER TO ADD WHITELIST/BLACKLIST FOR DOWNLOADS
 
-def init():
-    #Get the ship database
-    j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/ships.json').content
-    skills = json.loads(j)
-    f = open(os.path.join(dir,"ships/data/ships.json"), "w")
-    f.write(json.dumps(skills))
-    f.close()
-    del f
+def init(force: bool=False):
+    if not isinstance(force, bool):
+        raise TypeError("argument force should be of type bool")
 
-    #Get the ship type database
-    j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/types.json').content
-    types = json.loads(j)
-    f = open(os.path.join(dir,"ships/data/types.json"), "w")
-    f.write(json.dumps(types))
-    f.close()
-    del f
+    kept = 0
+    changed = 0
+    downloaded = 0
+    deleted = 0
 
-    #Get the ship retrofit database
-    content = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/retrofit.json').content
-    f = open(os.path.join(dir,"ships/data/retrofit.json"), "w")
-    f.write(content.decode('utf-8'))
-    f.close()
-    del f
+    downloaded_files = glob.glob("**/**/data/*.json")
+    for i,val in enumerate(downloaded_files):
+        downloaded_files[i] = path.join(dir,val).replace("perseus/perseus","perseus")
 
+    #Get checksums
+    j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/checksums.json').content
+    checksums = json.loads(j)
 
-    #Get the ship skill database
-    j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/skills.json').content
-    skills = json.loads(j)
-    f = open(os.path.join(dir,"ships/data/skills.json"), "w")
-    f.write(json.dumps(skills))
-    f.close()
-    del f
+    for key in checksums:
+        filepath = path.join(dir,key.replace("/","/data/"))
+        if (path.exists(filepath) and not force):
+            #Checksum file to chek for changes
+            #If the checksum is differnt redownload the file
+            f = open(filepath, "rb")
+            if (checksums[key] == hashlib.md5(f.read()).hexdigest()):
+                kept += 1
+            else:
+                j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/'+key).content
+                f = open(filepath, "w")
+                f.write(j.decode("utf-8"))
+                changed+=1
+            f.close()
+        else:
+            #Download the file
+            downloaded += 1
+            j = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/'+key).content
+            f = open(filepath, "w")
+            f.write(j.decode("utf-8"))
+            f.close()
+        if filepath in downloaded_files:
+            downloaded_files.remove(filepath)
 
-    #Get the ship nickname database
-    ## TODO: Change github host location
-    content = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/nicknames.json').content
-    f = open(os.path.join(dir,"ships/data/nicknames.json"), "w")
-    f.write(content.decode('utf-8'))
-    f.close()
-    del f
+    #Remove all the depecated files
+    for i in downloaded_files:
+        deleted += 1
+        os.remove(i)
 
-    #Get the ship lookup table
-    content = requests.get('https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/lookup_table.json').content
-    f = open(os.path.join(dir,"ships/data/lookup_table.json"), "w")
-    f.write(content.decode('utf-8'))
-    f.close()
-    del f
-
-    print("Repo up to date!")
+    if (not force):
+        print("Perseus:",downloaded+changed,"files downloaded.",deleted,"files deleted.",kept,"files did not require an update.")
+    else:
+        print("Perseus:",downloaded+changed,"files downloaded.",deleted,"files deleted.")

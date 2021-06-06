@@ -8,11 +8,6 @@ import json
 import os
 from .nicknames import *
 from .stats import *
-from .retrofit import *
-
-# from nicknames import *
-# from stats import *
-# from retrofit import *
 
 script_dir = os.path.dirname(__file__)
 
@@ -27,6 +22,10 @@ types = json.loads(f.read());
 
 f = open(os.path.join(script_dir,"data/lookup_table.json"), "r")
 lookup_table = json.loads(f.read());
+
+f = open(os.path.join(script_dir,"data/retrofit_id_lookup_table.json"), "r")
+retrofit_id_lookup_table = json.loads(f.read());
+f.close()
 
 f = open(os.path.join(script_dir,"data/retrofit.json"), "r")
 retrofit = json.loads(f.read());
