@@ -17,6 +17,13 @@ def init(force: bool=False):
     if not isinstance(force, bool):
         raise TypeError("argument force should be of type bool")
 
+
+    #Create data folders if they don't exist
+    for folder in glob.glob(os.path.join(dir, "*", "")):
+        ##Create folder if folder does not exist and not in __pycahce__
+        if (not os.path.isdir(os.path.join(folder,'data')) and not folder.endswith("__pycache__/")):
+            os.mkdir(os.path.join(folder,'data'))
+
     kept = 0
     changed = 0
     downloaded = 0

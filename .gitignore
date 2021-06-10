@@ -1,3 +1,6 @@
 *.json
 *.pyc
-perseus-env/
+perseus-env/*
+build/*
+dist/*
+perseus_Drakomire.egg-info/*
