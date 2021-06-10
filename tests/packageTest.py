@@ -11,9 +11,12 @@ sys.path.append('../src')
 from perseus import Perseus
 
 api = Perseus()
-api.initiate()
 
-g = api.Gear(1822)
-url = g.icon
-image = Image.open(io.BytesIO(requests.get(url).content))
-image.show()
+# g = api.Gear(1822)
+# url = g.icon
+# image = Image.open(io.BytesIO(requests.get(url).content))
+# image.show()
+
+s = api.Ship("Percy",nicknames=True)
+print(s.armor_type)
+print(s.stats)

@@ -53,3 +53,22 @@ ARMOR_TYPE = {
     2 : "Medium",
     3 : "Heavy"
 }
+
+SHIP_LOCATION = {
+  "1": "Vanguard",
+  "2": "Vanguard",
+  "3": "Vanguard",
+  "4": "Main Fleet",
+  "5": "Main Fleet",
+  "6": "Main Fleet",
+  "7": "Main Fleet",
+  "8": "Submarine",
+  "9": "Vanguard",
+  "10": "Main Fleet",
+  "11": "Vanguard",
+  "12": "Main Fleet",
+  "13": "Main Fleet",
+  "17": "Submarine",
+  "18": "Vanguard",
+  "19": "Vanguard"
+}

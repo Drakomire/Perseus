@@ -1,10 +1,10 @@
 import json
 import os
+from .__init__ import *
 from .nicknames import *
 from .stats import *
 from .retrofit import *
 from .skills import *
-from .__init__ import *
 
 class Ship:
     def __init__(self,ship,*,

@@ -3,6 +3,7 @@ Import requirements
 """
 
 from .download import init as initiate
+initiate()
 from .ships.ship import Ship, ships
 from .gear.gear import Gear
 
