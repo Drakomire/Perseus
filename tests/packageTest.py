@@ -12,16 +12,23 @@ from perseus import Perseus
 
 api = Perseus()
 
-# g = api.Gear(1822)
+# g = api.Gear(52)
 # url = g.icon
 # image = Image.open(io.BytesIO(requests.get(url).content))
 # image.show()
 
-s = api.getAllShips()[0]
-print(s.armor_type)
-print(s.name)
-print(s.level)
-print(s.skins[1]["thumbnail"])
+s = api.Ship("Percy",nicknames=True,affinity=95,oathed=False,level=44,limit_break=1)
+print(s.stats)
 
-gear = api.getAllGear()[5]
-print(gear.icon)
+# url = s.skins[0]["thumbnail"]
+# image = Image.open(io.BytesIO(requests.get(url).content))
+# image.show()
+
+
+# ships = api.getAllShips()
+# for ship in ships:
+#     print(ship.name)
+
+# gears = api.getAllGear()
+# for gear in gears:
+#     print(gear.name,":\t",gear.rarity)

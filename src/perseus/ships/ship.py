@@ -68,10 +68,28 @@ class Ship:
 
     @property
     def name(self):
-        '''
-        :return: ship name
-        '''
-        return self.ship["name"]["en"]
+        return self.nameEN
+
+    @property
+    def nameEN(self):
+        try:
+            return self.ship["name"]["en"]
+        except:
+            return None
+
+    @property
+    def nameJP(self):
+        try:
+            return self.ship["name"]["jp"]
+        except:
+            return None
+
+    @property
+    def nameCN(self):
+        try:
+            return self.ship["name"]["cn"]
+        except:
+            return None
 
     @property
     def stats(self):
