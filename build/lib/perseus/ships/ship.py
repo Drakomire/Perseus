@@ -7,7 +7,7 @@ from .skills import *
 from .__init__ import *
 
 class Ship:
-    def __init__(self,ship,*,
+    def __init__(self,ship,
     level: int=120,
     limit_break : int=3,
     enhancements : bool=True,
@@ -30,9 +30,6 @@ class Ship:
 
         :return: None
         """
-        #Type checking
-        # if (not isinstance(ship, int) and not isinstance(ship, str)):
-        #     raise TypeError("Argument ship should be a str or int")
 
         if (type(ship) == int):
             self.id = str(ship)
@@ -71,10 +68,28 @@ class Ship:
 
     @property
     def name(self):
-        '''
-        :return: ship name
-        '''
-        return self.ship["name"]["en"]
+        return self.nameEN
+
+    @property
+    def nameEN(self):
+        try:
+            return self.ship["name"]["en"]
+        except:
+            return None
+
+    @property
+    def nameJP(self):
+        try:
+            return self.ship["name"]["jp"]
+        except:
+            return None
+
+    @property
+    def nameCN(self):
+        try:
+            return self.ship["name"]["cn"]
+        except:
+            return None
 
     @property
     def stats(self):
@@ -168,8 +183,13 @@ class Ship:
         return Skill.getSkills(self)
 
     @property
-    def thumbnails(self):
-        return self.ship["skin_thumbnails"]
+    def skins(self):
+        out = []
+        for thumbnail in self.ship["skin_thumbnails"]:
+            out += [{
+                "thumbnail" : thumbnail
+            }]
+        return out
 
     def __str__(self):
         return str(self.name)

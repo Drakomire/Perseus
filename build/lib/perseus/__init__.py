@@ -3,8 +3,9 @@ Import requirements
 """
 
 from .download import init as initiate
+initiate()
 from .ships.ship import Ship, ships
-from .gear.gear import Gear
+from .gear.gear import Gear, gear
 
 #Set up the API class
 class Perseus:
@@ -26,4 +27,10 @@ class Perseus:
         out = []
         for key in ships:
             out += [Ship(int(key),**kwargs)]
+        return out
+
+    def getAllGear(self,*args,**kwargs):
+        out = []
+        for key in gear:
+            out += [Gear(int(key),**kwargs)]
         return out
