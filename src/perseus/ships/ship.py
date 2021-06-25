@@ -4,7 +4,10 @@ from .nicknames import *
 from .stats import *
 from .retrofit import *
 from .skills import *
-from .__init__ import *
+from .__init__ import STAT_KEYWORDS, ARMOR_TYPE, SHIP_LOCATION, types
+
+class UnknownShipError(KeyError):
+    pass
 
 class Ship:
     def __init__(self,ship,
@@ -31,6 +34,14 @@ class Ship:
         :return: None
         """
 
+        #Import files for class
+        from .__init__ import ships, skills, types, lookup_table, retrofit_id_lookup_table, retrofit as retrofit_json, nicknames
+
+        #Create the data dictionary
+        self.data = {
+            "retrofit" : retrofit_json
+        }
+
         if (type(ship) == int):
             self.id = str(ship)
             #Check if retrofited ship ID. Convert to normal ship ID.
@@ -39,7 +50,7 @@ class Ship:
         else:
             #Nicknames
             if (nicknames):
-                ship = getNickname(ship).lower()
+                ship = getNickname(ship,nicknames).lower()
             else:
                 ship = ship.lower()
 
@@ -47,9 +58,10 @@ class Ship:
                 self.id = str(lookup_table[ship])
                 self.ship = ships[self.id]
             else:
-                raise ValueError('Ship name is not valid')
+                raise UnknownShipError('Ship name is not valid')
 
         try:
+            #Set ship data
             self.ship = ships[self.id]
             self.level = level
             self.limit_break = limit_break
@@ -64,7 +76,7 @@ class Ship:
             self.retrofit = retrofit
 
         except KeyError:
-            raise ValueError('Ship ID is not valid')
+            raise UnknownShipError('Ship ID is not valid')
 
     @property
     def _full_id(self):
@@ -101,10 +113,10 @@ class Ship:
         '''
         :return: ship stats as per documentation
         '''
-        try:
-            return Stats.getStats(self)
-        except:
-            return "Invalid Limit Break"
+        # try:
+        return Stats.getStats(self)
+        # except:
+        #     return "Invalid Limit Break"
 
     @property
     def limit_break(self):
@@ -208,7 +220,7 @@ class Ship:
         try:
             return self.ship["data"][str(int(self.getRetrofitShipID())*10+4)]["stats_growth_extra"]
         except:
-            return self.ship["data"][str(int(self.getRetrofitShipID())*10+1)]["stats_growth"]
+            return self.ship["data"][str(int(self.getRetrofitShipID())*10+1)]["stats_growth_extra"]
 
     @property
     def hunting_range(self):
@@ -224,6 +236,7 @@ class Ship:
 
     def __str__(self):
         return str(self.name)
+
 #
 # s = Ship("Hyuuga",retrofit=False)
 # print(s.id)

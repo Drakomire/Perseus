@@ -31,6 +31,7 @@ for ship in ships:
         "name_jp" : ship.name_jp,
         "stats" : [],
         "base_list" : [],
+        "skills" : ship.getSkills(),
         "enhancements" : ship.ship["enhancement"],
         "retrofit_nodes" : ship.retrofit_nodes,
         "retrofit_stats" : ship.getRetrofitStats(),
@@ -53,6 +54,6 @@ for ship in ships:
 
     out += [v]
 
-f = open("all_ships.json",'w',encoding='utf8')
-f.write(json.dumps(out,indent=4))
+f = open("all_ships.json",'w',encoding='utf-8')
+f.write(json.dumps(out,indent=4,ensure_ascii=False).encode("utf-8").decode())
 f.close()
