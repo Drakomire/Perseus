@@ -10,7 +10,7 @@ from ._util import Lang, _APIObject
 from ._ships.ship import _Ship
 
 #Erros so user can catch them
-from ._util._erros import APIError, APIConnectionError, APIPathNotFoundError, APIReturnError
+from ._util._erros import PerseusAPIError, PerseusAPIConnectionError, PerseusAPIPathNotFoundError, PerseusAPIReturnError
 
 #Set up the API class
 class Perseus(_APIObject):

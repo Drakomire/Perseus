@@ -15,6 +15,7 @@ import time
 #     if 12 in slots_flattened:
 #         print(s.name)
 
-s = api.Ship("Warspite")
+s = api.Ship("Saratoga")
 print(s.slot_names)
-print(s.rarity)
+print(s.armor_id)
+print(s.armor_type)

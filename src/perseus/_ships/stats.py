@@ -1,5 +1,4 @@
 import math
-from .__init__ import *
 
 class Stats:
     @staticmethod
@@ -9,9 +8,7 @@ class Stats:
         :param ship: the Ship class for the ship to calculate the stats of.
         :return: ships stats at the current level
         '''
-        index = ship.getRetrofitShipID() * ship.retrofit + ship.id * (not ship.retrofit)
-        index = str(int(index)*10 + ship._limit_break)
-
+        index = ship._full_id
 
         attr = ship.ship["data"][index]["stats"][stat]
         attrs_growth = ship.ship["data"][index]["stats_growth"][stat]
@@ -35,7 +32,11 @@ class Stats:
             elif (ship.affinity <= 100):
                 affinity_multiplier = 1.06
 
-        value = attr + (ship.level-1)*attrs_growth/1000 + (ship.level-100)*(attrs_growth_extra/1000)
+
+        if ship.level > 100:
+            value = attr + (ship.level-1)*attrs_growth/1000 + (ship.level-100)*(attrs_growth_extra/1000)
+        else:
+            value = attr + (ship.level-1)*attrs_growth/1000
         # Add enhancement values to the stat
         if (stat in ship.ship["enhancement"] and ship.enhancements):
             value += ship.ship["enhancement"][stat]
@@ -44,31 +45,37 @@ class Stats:
 
         #Add retrofit stat boost if retrofit
         if (ship.retrofit):
-            retroStats = ship.getRetrofitStats()
-            if (stat in retroStats):
-                value += retroStats[stat]
+            retro_stats = ship.getRetrofitStats()
+            if (stat in retro_stats):
+                value += retro_stats[stat]
 
         return value
 
 
     @staticmethod
     def getMaxOilCost(ship):
-        '''
-        :param ship: the Ship class for the ship to calculate the oil cost of.
-        :return: ships oil cost at the current limit break. Rewrite is required to factor in level.
-        '''
-        index = ship.getRetrofitShipID() * ship.retrofit + ship.id * (not ship.retrofit)
-        index = str(int(index)*10 + ship._limit_break)
+        index = ship._full_id
         return ship.ship["data"][index]["oil"]
 
     @staticmethod
     def getOilCostAtLevel(ship):
       #Submarines use a different oil cost equation than other hull classes
       max_cost = Stats.getMaxOilCost(ship)
-      if (SHIP_LOCATION[ship.hull_id] == "Submarine"):
+      if (ship.team_type == "submarine"):
         return math.floor((max_cost+1)*(100+min(ship.level,99))/200)
       else:
         return math.floor(max_cost*(100+min(ship.level,99))/200)+1
+
+    @staticmethod
+    def getHuntingRange(ship):
+        try: return ship.ship["hunting_range"]
+        except: return None
+
+    @staticmethod
+    def getOxy(ship):
+        index = ship._full_id
+        try: return ship.ship["data"][index]["stats"]["oxy"]
+        except: return None
 
     @staticmethod
     def getStats(ship):
@@ -76,7 +83,7 @@ class Stats:
         :param ship: the Ship class to calculate the stats of.
         :return: the stats for the ship as written in documentation.
         '''
-        return {
+        out = {
           "hp": Stats.calculateStat("hp",ship),
           "fp": Stats.calculateStat("fp",ship),
           "trp": Stats.calculateStat("trp",ship),
@@ -90,3 +97,10 @@ class Stats:
           "asw": Stats.calculateStat("asw",ship),
           "oil" : Stats.getOilCostAtLevel(ship)
         }
+
+        if (SHIP_LOCATION[ship.hull_id] == "Submarine"):
+            out["oxy"] = Stats.getOxy(ship)
+            # out["hunting_range"] = Stats.getHuntingRange(ship)
+
+        return out
+
