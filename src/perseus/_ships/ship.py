@@ -3,10 +3,10 @@ from sys import maxsize
 from .nicknames import *
 from .stats import *
 from .retrofit import *
-from .skills import *
+from .skill_descript import SkillDescript as Skill
+from .skill import Skill
 from .__init__ import STAT_KEYWORDS
-from .._util import _APIObject
-from perseus._ships import skills
+from .._util import _APIObject, Lang
 
 class _Ship(_APIObject):
     @lru_cache(maxsize=70)
@@ -85,11 +85,17 @@ class _Ship(_APIObject):
 
     @property
     def rarity_id(self):
-        return self.ship["data"][self._full_id]["rarity"]
+        if not self.retrofit:
+            return self.ship["data"][self._full_id]["rarity"]
+        else:
+            return self.ship["data"][self._full_id]["retrofit_rarity"]
 
     @property
     def rarity(self):
-        return self.ship["data"][self._full_id]["rarity_name"]
+        if not self.retrofit:
+            return self.ship["data"][self._full_id]["rarity_name"]
+        else:
+            return self.ship["data"][self._full_id]["retrofit_rarity_name"]
 
     @property
     def ship_class(self):
@@ -139,7 +145,10 @@ class _Ship(_APIObject):
 
     @property
     def efficiency(self) -> list:
-        return self.ship["data"][self._full_id]["efficiency"]
+        if not self.retrofit:
+            return self.ship["data"][self._full_id]["efficiency"]
+        else:
+            return [round(Retrofit.getRetrofitEfficiency(self)[i] + self.ship["data"][self._full_id]["efficiency"][i], 2) for i in range(3)]
 
     @property
     def has_retrofit(self) -> bool:
@@ -222,6 +231,15 @@ class _Ship(_APIObject):
         """
         return self.ship["armor"]
 
+    @property
+    def skills(self):
+        out = []
+        for index,skill in enumerate(self.ship["skills"]):
+            out += [
+                Skill(self,index)
+            ]
+        return out
+
     @lru_cache
     def getSkills(self,lang=Lang.EN,level=0):
         return Skill.getSkills(self,lang=lang,level=level)
@@ -268,10 +286,17 @@ class _Ship(_APIObject):
         return self.ship["data"][self._full_id]["slots"]
 
     @property
+    def team_type(self):
+        return self.ship["data"][self._full_id]["team_type"]
+
+    @property
     def slot_names(self):
         return self.ship["data"][self._full_id]["slot_names"]
-#
-# s = Ship("Hyuuga",retrofit=False)
-# print(s.id)
-# print(s.getRetrofitShipID())
-# print(s.stats)
+
+    @property
+    def nationality_id(self):
+        return self.ship["nationality"]
+
+    @property
+    def nationality(self):
+        return self.ship["nationality_name"]

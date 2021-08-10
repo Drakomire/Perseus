@@ -8,6 +8,7 @@ from io import BytesIO
 import requests
 from ._util import Lang, _APIObject
 from ._ships.ship import _Ship
+from ._ships import Pos
 
 #Erros so user can catch them
 from ._util._erros import PerseusAPIError, PerseusAPIConnectionError, PerseusAPIPathNotFoundError, PerseusAPIReturnError

@@ -98,7 +98,7 @@ class Stats:
           "oil" : Stats.getOilCostAtLevel(ship)
         }
 
-        if (SHIP_LOCATION[ship.hull_id] == "Submarine"):
+        if (ship.hull_type == "Submarine"):
             out["oxy"] = Stats.getOxy(ship)
             # out["hunting_range"] = Stats.getHuntingRange(ship)
 

@@ -3,6 +3,12 @@ import json
 import math
 from .__init__ import STAT_KEYWORDS
 
+EFF_LOC = {
+    "equipment_proficiency_1" : 0,
+    "equipment_proficiency_2" : 1,
+    "equipment_proficiency_3" : 2,
+}
+
 class Retrofit:
     def __init__(self):
         pass
@@ -25,6 +31,18 @@ class Retrofit:
                         else:
                             out[STAT_KEYWORDS[key]] = r[key]
         return out
+
+    @staticmethod
+    def getRetrofitEfficiency(ship):
+        eff_out = [0,0,0]
+
+        for node in ship.ship["retrofit"]:
+            for r in node["effect"]:
+                for key in r:
+                    if (key in EFF_LOC):
+                        eff_out[EFF_LOC[key]] += r[key]
+        
+        return eff_out
 
     @staticmethod
     def getRetrofitShipID(ship):

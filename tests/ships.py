@@ -33,8 +33,9 @@ import time
 # print(f"Effects on self (Center) {Skill.apply_skill(s,[],s.skills[1],pos=Pos.CENTER)}")
 # print(f"Effects on self (Rear) {Skill.apply_skill(s,[],s.skills[1],pos=Pos.REAR)}")
 
-s = api.Ship("Azuma")
-print(s.rarity)
+s = api.Ship("Independence",retrofit=True,enhancements=True)
+print(s.efficiency)
+print(s.stats)
 
 # print(s.skills[0]._game_effect)
 
