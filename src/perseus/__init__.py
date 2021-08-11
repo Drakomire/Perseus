@@ -34,7 +34,7 @@ class Perseus(_APIObject):
 
     def getAllGear(self,*args,**kwargs):
         out = []
-        for key in self.gear_json:
+        for key in self._getFromAPI(f"gear/all_ids"):
             out += [self.Gear(int(key),**kwargs)]
         return out
 
