@@ -4,7 +4,7 @@ from .nicknames import *
 from .stats import *
 from .retrofit import *
 from .skill_descript import SkillDescript as Skill
-from .skill import Skill
+from .skill import Skill as SkillEffect
 from .__init__ import STAT_KEYWORDS
 from .._util import _APIObject, Lang
 

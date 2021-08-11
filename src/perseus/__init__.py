@@ -15,7 +15,8 @@ from ._util._erros import PerseusAPIError, PerseusAPIConnectionError, PerseusAPI
 
 #Set up the API class
 class Perseus(_APIObject):
-    def __init__(self, url=""):
+    def __init__(self, url="http://perseusapi.duckdns.org:5000"):
+        if url.endswith("/"): url = url[:-1]
         super().__init__(url)
 
     def Ship(self, *args, **kwargs):
