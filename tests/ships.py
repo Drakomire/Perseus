@@ -33,9 +33,15 @@ import time
 # print(f"Effects on self (Center) {Skill.apply_skill(s,[],s.skills[1],pos=Pos.CENTER)}")
 # print(f"Effects on self (Rear) {Skill.apply_skill(s,[],s.skills[1],pos=Pos.REAR)}")
 
-s = api.Ship("Ardent",retrofit=True,enhancements=True)
-print(s.efficiency)
-print(s.getFormattedSkills())
+ships = api.getAllShips()
+
+for ship in ships:
+    print(ship.name)
+
+equips = api.getAllGear()
+
+for equip in equips:
+    print(equip.name_en)
 
 # print(s.skills[0]._game_effect)
 

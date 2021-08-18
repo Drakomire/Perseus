@@ -6,39 +6,52 @@ from typing import Generator
 from PIL import Image
 from io import BytesIO
 import requests
-from ._util import Lang, _APIObject
+from ._util import Lang, _API
 from ._ships.ship import _Ship
 from ._ships import Pos
 from ._gear.gear import _Gear
 
 #Erros so user can catch them
 from ._util._erros import PerseusAPIError, PerseusAPIConnectionError, PerseusAPIPathNotFoundError, PerseusAPIReturnError
+from perseus._ships import ship
 
 #Set up the API class
-class Perseus(_APIObject):
+class Perseus():
     def __init__(self, url="http://perseusapi.duckdns.org:5000"):
         if url.endswith("/"): url = url[:-1]
-        super().__init__(url)
+        self._api = _API(url)
 
-    def Ship(self, *args, **kwargs):
-        return _Ship(self.url,*args,**kwargs)
+    def Ship(self, ship, **kwargs):
+        return _Ship.from_api(self._api,ship,**kwargs)
 
-    def Gear(self, *args, **kwargs):
-        return _Gear(self.url,*args,**kwargs)
+    def Gear(self, gear, **kwargs):
+        return _Gear.from_api(self._api,gear,**kwargs)
 
     def update(self):
         self.initiate()
 
     def getAllShipNames(self,lang: Lang=Lang.EN):
-        return self._getFromAPI(f"ship/all_names?{lang=}")
+        return self._api._getFromAPI(f"ship/all_names?{lang=}")
 
-    def getAllShips(self,*args,**kwargs) -> Generator:
-        for i in self._getFromAPI(f"ship/all_ids"):
-            yield self.Ship(i,*args,**kwargs)
+    def getAllShips(self,**kwargs) -> Generator:
+        res = requests.get("https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/ships/ships.json")
+        if res.status_code == 200:
+            ships = res.json()
+        else:
+            raise PerseusAPIError("Could not connect to github")
 
-    def getAllGear(self,*args,**kwargs):
-        for key in self._getFromAPI(f"gear/all_ids"):
-            yield self.Gear(int(key//10),**kwargs)
+        for ship_id in ships:
+            yield _Ship(ships[ship_id],**kwargs)
+
+    def getAllGear(self,**kwargs):
+        res = requests.get("https://raw.githubusercontent.com/Drakomire/perseus-data/master/dist/gear/gear.json")
+        if res.status_code == 200:
+            gear = res.json()
+        else:
+            raise PerseusAPIError("Could not connect to github")
+
+        for gear_id in gear:
+            yield _Gear(gear[gear_id],**kwargs)
 
     def downloadImage(self,url):
         req = requests.get(url)

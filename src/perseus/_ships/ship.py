@@ -6,20 +6,20 @@ from .retrofit import *
 from .skill_descript import SkillDescript as Skill
 from .skill import Skill as SkillEffect
 from .__init__ import STAT_KEYWORDS
-from .._util import _APIObject, Lang
+from .._util import _API, Lang
+from perseus._ships import nicknames
 
-class _Ship(_APIObject):
-    @lru_cache(maxsize=70)
+from typing import Union
+
+class _Ship:
     def __init__(self,
-    url,
-    ship,
+    ship_info: dict,
     level: int=120,
     limit_break : int=3,
     enhancements : bool=True,
     affinity: int=100,
     oathed :bool=False,
-    retrofit :bool=True,
-    nicknames :bool=False
+    retrofit :bool=True
     ):
         """
         :param ship: The ship's ID as int or name as String
@@ -30,16 +30,10 @@ class _Ship(_APIObject):
         :param oathed: Boolean if oathed.
         :param retrofit: Boolean if retrofit. Turns to false if the ship doesn't have a retrofit.
 
-        Config Options
-        :param nicknames: Boolean if nicknames DB should be used.
-
         :return: None
         """
 
-        super().__init__(url)
-        res = self._getFromAPI(f"ship/{ship}?{nicknames=}")
-
-        self.ship = res
+        self.ship = ship_info
         self.level = level
         self.limit_break = limit_break
         self.enhancements = enhancements
@@ -48,6 +42,15 @@ class _Ship(_APIObject):
         self.retrofit = retrofit
 
         self.id = str(self.ship["id"])
+
+    @staticmethod
+    @lru_cache
+    def from_api(api: _API,ship: Union[int,str],nicknames=False,**kwargs) -> "_Ship":
+        """
+        :param nicknames: Boolean if nicknames DB should be used.
+        """
+        res = api._getFromAPI(f"ship/{ship}?{nicknames=}")
+        return _Ship(res,**kwargs)
 
     @property
     def _full_id(self):

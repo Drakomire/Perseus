@@ -3,7 +3,7 @@ import json
 from ._erros import PerseusAPIConnectionError, PerseusAPIPathNotFoundError, PerseusAPIReturnError
 from ._lang import Lang
 
-class _APIObject():
+class _API():
     def __init__(self, url: str) -> None:
         self.url = url
 

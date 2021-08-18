@@ -1,17 +1,22 @@
-from .._util import _APIObject
+from functools import lru_cache
+from .._util import _API
 
-class _Gear(_APIObject):
-    def __init__(self,url,gear_id,level=10):
-        super().__init__(url)
-        res = self._getFromAPI(f"gear/{gear_id}")
+class _Gear():
+    def __init__(self,gear_info,level=10):
 
-        self.id = str(gear_id)
-        self.gear = res
+        self.gear = gear_info
+        self.id = str(gear_info["id"])
         self.level = level
+
+    @staticmethod
+    @lru_cache
+    def from_api(api: _API,gear: int,**kwargs) -> "_Gear":
+        res = api._getFromAPI(f"gear/{gear}")
+        return _Gear(res,**kwargs)
 
     @property
     def name(self):
-        return self.nameEN
+        return self.name_en
 
     @property
     def name_en(self):
