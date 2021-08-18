@@ -21,7 +21,8 @@ class SkillDescript:
         return {
             "name" : skill["name"][lang],
             "description" : description,
-            "id" : skill["id"]
+            "id" : skill["id"],
+            "icon" : skill["icon"]
         }
 
     @staticmethod
@@ -52,6 +53,7 @@ class SkillDescript:
             "name_jp" : skills_jp[i]["name"],
             "name_cn" :  skills_cn[i]["name"],
             "description" : skills[i]["description"],
+            "icon" : skills[i]["icon"],
         }
         for i in range(len(skills))
         ]
@@ -72,7 +74,8 @@ class SkillDescript:
                 "name" : "All out Assault",
                 "name_jp" : aoa_jp[-1]["name"],
                 "name_cn" : aoa_cn[-1]["name"],
-                "description" : f"Every {level_one_occurrence} ({level_two_occurrence}) times the main gun is fired, trigger Full Barrage - {barrage_name} I (II)."
+                "description" : f"Every {level_one_occurrence} ({level_two_occurrence}) times the main gun is fired, trigger Full Barrage - {barrage_name} I (II).",
+                "icon" : aoa_jp[-1]["icon"]
             }]
 
             if len(aoa) > 2:

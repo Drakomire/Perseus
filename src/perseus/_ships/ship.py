@@ -255,7 +255,8 @@ class _Ship:
         else: return [
             {
                 "name" : aoa["name"][lang],
-                "description" : aoa["desc"][lang]
+                "description" : aoa["desc"][lang],
+                "icon" : aoa["icon"]
             }
             for aoa in tmp
             ]
