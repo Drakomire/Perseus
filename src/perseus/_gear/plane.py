@@ -28,7 +28,7 @@ class _Plane(_Weapon):
         return self._plane["dodge_limit"]
 
     @property
-    def ordinance(self):
+    def armament(self):
         out = []
 
         for armament in self._armaments:
@@ -46,7 +46,7 @@ class _Armament:
         return self.data["spawn"][0]
 
     @property
-    def damage(self):
+    def bullet_damage(self):
         return self.data["damage"]
 
     @property
@@ -55,11 +55,19 @@ class _Armament:
 
     @property
     def volley(self):
-        return self._spawn["size"]
+        #AP rockets are single int
+        #Bombs are an array
+
+        v = self._spawn["size"]
+
+        if type(v) == int:
+            return [1,v]
+        else:
+            return v
 
     @property
-    def ingame_damage(self):
-        return [self.damage, self.volley[0] * self.volley[1]]
+    def damage(self):
+        return [self.bullet_damage, self.volley[0] * self.volley[1]]
 
 class _AntiAircraftGun(_Armament):
 

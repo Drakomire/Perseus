@@ -26,7 +26,7 @@ class _Weapon(_Gear):
         return self._weapon["coefficient"]
 
     @property
-    def ingame_damage(self) -> List:
+    def damage(self) -> List:
         pass
 
 
@@ -71,13 +71,13 @@ class _Gun(_VanguardWeapon):
         }
 
     @property
-    def ingame_damage(self) -> List[int]:
+    def damage(self) -> List[int]:
         return [self.shell_damage,self._spawn['size'][0] * self._spawn['size'][1]]
 
 class _Torpedo(_VanguardWeapon):
 
     @property
-    def ingame_damage(self) -> List[int]:
+    def damage(self) -> List[int]:
         return [self.shell_damage,self._spawn['size']]
 
     @property
