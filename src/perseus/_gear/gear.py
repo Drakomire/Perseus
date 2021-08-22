@@ -7,13 +7,7 @@ class _Gear():
         self.gear = gear_info
         self.id = str(gear_info["id"])
         self.level = level
-
-    @staticmethod
-    @lru_cache
-    def from_api(api: _API,gear: int,**kwargs) -> "_Gear":
-        res = api._getFromAPI(f"gear/{gear}")
-        return _Gear(res,**kwargs)
-
+        
     @property
     def name(self):
         return self.name_en
@@ -66,3 +60,8 @@ class _Gear():
     @property
     def equip_limit(self):
         return self.gear["equip_limit"]
+
+    @property
+    def stat_boosts(self):
+        stats = zip(self.gear["stat_boost_types"], self.gear["stat_boost"][self.level])
+        return [stat for stat in stats if stat[0]]
