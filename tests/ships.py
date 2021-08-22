@@ -10,27 +10,27 @@ api = Perseus(url="http://localhost:5000")
 # api = Perseus(url="http://perseusapi.duckdns.org:5000")
 # nautalis and ingraham
 
-g = api.Gear("Prototype BF-109G", level=10)
-
-# print(g.stat_boosts)
-# print(g.reload)
-# print(g.spread)
-# print(g.firing_angle)
-
-# print(g.range)
+# g = api.Gear("Prototype BF-109G", level=10)
+g = api.Gear("F7F Tigercat", level=13)
 
 
-# print(f"damage: {g.ingame_damage}")
-# print(g.volley)
-# print(g.volley_time)
-# print(g.coefficient)
-# print(g.armor_mods)
+x_join = " x "
 
-ordinance = g.ordinance
+s = f"""
+Stats: {g.stat_boosts}
+Level: {g.level}
+Plane Health: {g.hp}
+RoF: {g.reload}
+Speed: {g.speed}
+Dodge Limit: {g.dodge_limit}
+Crash Damage: {g.crash_damage}
+Ordnance: {''.join([
+    f'''
+    Name: {arm.name}
+    Damage: {x_join.join([str(v) for v in arm.damage])} ({arm.damage[0]*arm.damage[1]})
+    '''
+    for arm in g.armament
+])}
+"""
 
-for arm in ordinance:
-    print(arm.name)
-
-print(g.speed)
-print(g.dodge_limit)
-print(g.crash_damage)
+print(s)
